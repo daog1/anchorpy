@@ -7,18 +7,11 @@ from typing import Any, Dict, Optional, Tuple
 from anchorpy_idl import (
     Idl,
     IdlEvent,
-    IdlField,
-    IdlTypeDef,
-    IdlTypeDefStruct,
-    IdlSerializationSimple,
-IdlDefinedFieldsNamed,
-IdlDefinedFieldsTuple
-
 )
 from construct import Adapter, Bytes, Construct, Sequence, Switch
 from pyheck import snake
 
-from anchorpy.coder.idl import _typedef_layout,find_type_by_name
+from anchorpy.coder.idl import _typedef_layout, find_type_by_name
 from anchorpy.program.common import Event
 
 
@@ -35,23 +28,12 @@ def _event_discriminator(name: str) -> bytes:
 
 
 def _event_layout(event: IdlEvent, idl: Idl) -> Construct:
-    evType =find_type_by_name(event.name,idl.types)
-    if isinstance(evType.ty,IdlTypeDefStruct):
-        evFields = evType.ty.fields.fields
-        event_type_def = IdlTypeDef(
-            name=event.name,
-            docs=[],
-            ty=IdlTypeDefStruct(
-                IdlDefinedFieldsNamed(fields=[
-                    IdlField(name=snake(f.name), docs=[], ty=f.ty) for f in evFields
-                ]),
-            ),
-            generics=[],
-            repr=None,
-            serialization=IdlSerializationSimple.Borsh,
-        )
-        return _typedef_layout(event_type_def, idl.types, event.name)
-    raise ValueError(f"Type '{event.name}' not found in types list")  # Raise error if type not found
+    """Build the layout for an event by reusing its typedef directly.
+
+    This avoids relying on newer anchorpy_idl symbols.
+    """
+    ev_type_def = find_type_by_name(event.name, idl.types)
+    return _typedef_layout(ev_type_def, idl.types, event.name)
 
 
 class EventCoder(Adapter):

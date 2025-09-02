@@ -15,14 +15,14 @@ dependencies = [
     "autoflake>=2.3.1",
     "black>=25.1.0",
     "genpy>=2022.1",
-    "anchorpy-idl @ file:///Users/ttt/code/pysrc/anchorpy-idl2",
+    "anchorpy-idl",
 ]
-#    "anchorpy-idl @ file:////Users/ttt/code/pysrc/anchorpy-idl2",
+#    "anchorpy-idl",
 name = "anchorpy"
 version = "0.21.0"
 description = "The Python Anchor client."
 authors = [{ name = "kevinheavey", email = "kevinheavey123@gmail.com" }]
-requires-python = "~=3.9"
+requires-python = ">=3.9"
 readme = "README.md"
 
 #"anchorpy-core>=0.2.0,<0.3",
